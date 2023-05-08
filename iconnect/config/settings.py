@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,6 +21,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# User model
+AUTH_USER_MODEL = 'accounts.User'
 
 # Application definition
 
@@ -35,7 +38,8 @@ THIRD_PARTY_APPS = [
 
 ]
 LOCAL_APPS = [
-
+    'accounts',
+    'posts',
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
