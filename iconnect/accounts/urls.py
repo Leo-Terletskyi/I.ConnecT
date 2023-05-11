@@ -11,5 +11,6 @@ urlpatterns = [
     
     # user account
     path('<int:pk>/', views.UserAccDetailView.as_view(), name='user_acc'),
+    path('profile/', views.UpdateUserProfileView.as_view(), name='user_profile'),
     
 ]

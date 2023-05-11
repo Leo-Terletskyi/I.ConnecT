@@ -1,7 +1,9 @@
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 
-from .models import User
-from django.contrib.auth.forms import UserCreationForm
+
+User = get_user_model()
 
 
 class LoginForm(forms.Form):
@@ -49,4 +51,51 @@ class UserRegisterForm(UserCreationForm):
             "phone": forms.TextInput(attrs=form_control),
             "birthday": forms.DateInput(attrs={"class": "form-control", "type": "date"})
         }
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            "avatar",
+            "email",
+            "first_name",
+            "last_name",
+            "birthday",
+            "phone",
+        )
+        widgets = {
+            "avatar": forms.FileInput(
+                attrs={"class": "form-control"}
+            ),
+            "email": forms.EmailInput(
+                attrs={"class": "form-control"}
+            ),
+            "first_name": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+            "last_name": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+            "birthday": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"},
+                format=("%Y-%m-%d")
+            ),
+            "phone": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+        }
         
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if 'avatar' in self.changed_data and not instance.avatar:
+            instance.avatar = self.changed_data['avatar']
+        if commit:
+            instance.save()
+        return instance
+    
+
+class UserPasswordChangeForm(SetPasswordForm):
+    class Meta:
+        model = User
+        fields = ["new_password1", "new_password2"]
