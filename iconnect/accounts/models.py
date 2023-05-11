@@ -4,9 +4,9 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    avatar = models.ImageField(upload_to='users/avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='users/avatars/', null=True)
     birthday = models.DateField(null=True, blank=True)
-    phone = models.CharField('phone number', max_length=14, null=True, blank=True)
+    phone = models.CharField('phone number', max_length=14, null=True)
     
     class Meta:
         verbose_name = 'user'
@@ -14,6 +14,4 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.username
-    
-    
     

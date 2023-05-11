@@ -24,6 +24,8 @@ ALLOWED_HOSTS = []
 # User model
 AUTH_USER_MODEL = 'accounts.User'
 
+LOGIN_REDIRECT_URL = 'sign_in'
+
 # Application definition
 
 DJANGO_APPS = [
