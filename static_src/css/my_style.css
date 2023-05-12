@@ -4,6 +4,10 @@
 
 }
 
-/*.page-body {*/
-/*    min-height: 75vh;*/
-/*}*/
+.he-250 {
+    height: 250px!important;
+}
+
+.he-300 {
+    height: 300px!important;
+}
