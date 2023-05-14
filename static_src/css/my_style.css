@@ -11,3 +11,10 @@
 .he-300 {
     height: 300px!important;
 }
+
+.my-logo-bg {
+    background-image: url("http://127.0.0.1:8000/static/img/logos/IconnecT-logos/svg/logo-no-background.svg");
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: 200px;
+}

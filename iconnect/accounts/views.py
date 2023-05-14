@@ -9,6 +9,8 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy
 from django.views import generic
 
+from posts.forms import PostCreateForm
+from posts.models import Post
 from .forms import LoginForm, UserRegisterForm, UserUpdateForm, UserPasswordChangeForm
 
 User = get_user_model()
@@ -48,6 +50,12 @@ class UserAccDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'accounts/user_acc.html'
     model = User
     context_object_name = 'user'
+    
+    def get_context_data(self, **kwargs):
+        context = super(UserAccDetailView, self).get_context_data()
+        context['current_user_posts'] = Post.objects.filter(author_id=self.request.user.id, is_archive=False)
+        context['form'] = PostCreateForm()
+        return context
 
 
 class UpdateUserProfileView(LoginRequiredMixin, generic.UpdateView):

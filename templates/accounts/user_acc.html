@@ -125,7 +125,11 @@
                     </div>
                 </div>
             </div>
-            <div class="hr-text">User's posts</div>
+            {% if request.user.id == user.id %}
+                <div class="hr-text">{% include 'posts/post_create_modal_form.html' %}</div>
+            {% else %}
+                <div class="hr-text">Posts</div>
+            {% endif %}
             <div class="col-lg-3 m-0">
                 <ul class="list-unstyled px-1">
                     <li class="p-2 text-muted fw-bold">Profile actions:</li>
@@ -135,57 +139,38 @@
                     <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">User profile</a></li>
                 </ul>
             </div>
-            <div class="col-lg-9">
-                <div class="card">
-                    <div class="card-status-start bg-green"></div>
-                    <div class="row row-0">
-                        <div class="col-3 order-md-last p-1">
-                            <!-- Photo -->
-                            <img src="{% static 'img/logos/IconnecT-logos/svg/logo-no-background.svg' %}"
-                                 class="w-100 h-100 object-cover card-img-end" alt="Finances - US Dollars and Bitcoins - Currency - Money">
-                        </div>
-                        <div class="col">
-                            <div class="ribbon bg-red">NEW</div>
-                            <div class="card-body">
-                                <h3 class="card-title">Card with right side image</h3>
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit
-                                    incidunt, iste, itaque minima
-                                </p>
+            {% if current_user_posts %}
+                {% for post in current_user_posts %}
+                    <div class="col-lg-9">
+                        <div class="card">
+                            <div class="card-status-start bg-green"></div>
+                            <div class="row row-0">
+                                <div class="col-3 order-md-last p-1">
+                                    {% if post.image %}
+                                        <img src="{{ post.image.url }}"
+                                             class="w-100 h-100 object-cover card-img-end"
+                                             alt="">
+                                    {% else %}
+                                        <img src="{% static 'img/logos/IconnecT-logos/svg/logo-color.svg' %}"
+                                             class="w-100 h-100 object-cover card-img-end"
+                                             alt="">
+                                    {% endif %}
+                                </div>
+                                <div class="col">
+                                    <div class="card-body">
+                                        <h5 class="h-1 mb-4">Updated {{ post.updated_at|timesince }} ago</h5>
+                                        <p class="text-muted">{{ post.description }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-            </div>
-            <div class="col-lg-9">
-                <div class="card">
-                    <div class="card-status-start bg-green"></div>
-                    <div class="row row-0">
-                        <div class="col-3 order-md-last p-1">
-                            <!-- Photo -->
-                            <img src="{% static 'img/logos/IconnecT-logos/svg/logo-color.svg' %}"
-                                 class="w-100 h-100 object-cover card-img-end" alt="Finances - US Dollars and Bitcoins - Currency - Money">
-                        </div>
-                        <div class="col">
-                            <div class="card-body">
-                                <h3 class="card-title">Card with right side image</h3>
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit
-                                    incidunt, iste, itaque minima
-                                    neque pariatur perferendis sed suscipit velit vitae voluptatem. Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit. Dolorem praesentium reprehenderit repudiandae voluptates. A architecto, culpa, cum
-                                    dicta doloremque enim et impedit ipsa libero officia porro quaerat qui sapiente suscipit unde?
-                                    Accusantium ad assumenda consequatur cum distinctio dolore eaque eius error est et excepturi expedita,
-                                    explicabo facilis fugit impedit iste laborum magni obcaecati officia, placeat porro praesentium quaerat
-                                    quam quia quidem quod, repellendus saepe sequi sunt tempora temporibus vel veritatis vitae voluptas
-                                    voluptatem voluptates voluptatum. Ab commodi distinctio esse iste iusto nobis perferendis quibusdam quos
-                                    reprehenderit sapiente? Amet exercitationem illum laudantium minus optio, quam quas quis recusandae,
-                                    rem, voluptates voluptatibus?</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-3">
                     </div>
-                </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-lg-9"></div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

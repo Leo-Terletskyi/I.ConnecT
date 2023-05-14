@@ -7,7 +7,7 @@ user = get_user_model()
 
 class Post(models.Model):
     author = models.ForeignKey(user, on_delete=models.CASCADE, related_name='posts')
-    image = models.ImageField(upload_to='posts/')
+    image = models.ImageField(upload_to='posts/', blank=True, null=True)
     description = models.TextField()
     is_archive = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
