@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit post
+{% endblock %}
+
+{% block content %}
+    <div class="container-xl">
+        {% if post.image %}
+            <img src="{{ post.image.url }}" width="350" alt="">
+        {% endif %} 
+        <form action="{% url 'update_post' post.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+            <button type="submit" class="btn btn-azure">GO!</button>
+    </form>
+    </div>
+{% endblock %}

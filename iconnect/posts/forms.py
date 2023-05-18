@@ -18,3 +18,29 @@ class PostCreateForm(forms.ModelForm):
                 attrs={"class": "form-control"}
             )
         }
+
+
+class PostUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = [
+            "image",
+            "description"
+        ]
+        widgets = {
+            "image": forms.FileInput(
+                attrs={"class": "form-control"},
+            ),
+            "description": forms.Textarea(
+                attrs={"class": "form-control"}
+            )
+        }
+        
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if 'image' in self.changed_data and not instance.image:
+            instance.image = self.changed_data['image']
+        if commit:
+            instance.save()
+        return instance
+
