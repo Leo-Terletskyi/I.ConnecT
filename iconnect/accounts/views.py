@@ -75,3 +75,12 @@ class UpdateUserProfileView(LoginRequiredMixin, generic.UpdateView):
         return reverse_lazy("user_acc", kwargs={'pk': self.request.user.id})
 
 
+class UserPostsListView(LoginRequiredMixin, generic.ListView):
+    model = Post
+    template_name = 'posts/post_archive.html'
+    context_object_name = 'posts'
+    
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user, is_archive=True)
+    
+    

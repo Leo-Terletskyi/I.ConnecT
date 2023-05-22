@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
@@ -39,14 +40,14 @@ class PostUpdateView(generic.UpdateView):
 
 
 def post_archiving(request, pk):
-    post = get_object_or_404(Post, id=pk, author=request.user)
+    post = get_object_or_404(Post, id=pk, author_id=request.user.id)
     if not post.is_archive:
         post.is_archive = True
         post.save()
-        return reverse_lazy('user_acc', kwargs={'pk': request.user.id})
+        return redirect('user_acc', pk=request.user.id)
     post.is_archive = False
     post.save()
-    return reverse_lazy('user_acc', kwargs={'pk': request.user.id})
+    return redirect('post_archive', pk=request.user.id)
 
 
 def delete_post(request, pk):
@@ -54,4 +55,3 @@ def delete_post(request, pk):
     if request.user.id == post.author.id:
         post.delete()
     return redirect('user_acc', pk=request.user.id)
-

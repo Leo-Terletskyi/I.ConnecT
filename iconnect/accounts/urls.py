@@ -11,6 +11,7 @@ urlpatterns = [
     
     # user account
     path('<int:pk>/', views.UserAccDetailView.as_view(), name='user_acc'),
+    path('<int:pk>/post-archive/', views.UserPostsListView.as_view(), name='post_archive'),
     path('profile/', views.UpdateUserProfileView.as_view(), name='user_profile'),
     
 ]

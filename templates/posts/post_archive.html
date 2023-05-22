@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    post archive
+{% endblock %}
+
+{% block content %}
+    <div class="container-xl">
+        {% for post in posts %}
+            <div class="col-lg-9">
+                <div class="card mb-3">
+                    <div class="card-status-start bg-green"></div>
+                    <div class="row row-0">
+                        <div class="col-3 order-md-last p-1">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}"
+                                     class="w-100 h-100 object-cover card-img-end"
+                                     alt="">
+                            {% else %}
+                                <img src="{% static 'img/logos/no_logo/no-image__63632.webp' %}"
+                                     class="w-100 h-100 object-cover card-img-end"
+                                     alt="">
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            <div class="card-body">
+                                <h5 class="h-1 mb-4 px-4">Updated {{ post.updated_at|timesince }} ago</h5>
+                                <p class="text-muted">{{ post.description }}</p>
+                            </div>
+                            {% if user.id == request.user.id %}
+                                <div class="ribbon ribbon-top ribbon-end bg-azure">
+                                    <a href="{% url 'delete_post' post.id %}">
+                                        <img class="p-1" src="{% static 'img/logos/ic/xbox-x.png' %}" alt="">
+                                    </a>
+                                </div>
+                                <div class="ribbon ribbon-top ribbon-start bg-google">
+                                    <a href="{% url 'update_post' post.id %}">
+                                        <img src="{% static 'img/logos/ic/pencil.png' %}" alt="">
+                                    </a>
+                                </div>
+                                <a href="{% url 'post_archiving' post.id %}">
+                                    <div class="ribbon ribbon-bottom ribbon-end bg-google">
+                                        unzip
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="ribbon ribbon-bottom ribbon-end bg-white">
+                                    <button class="switch-icon" data-bs-toggle="switch-icon">
+                                          <span class="switch-icon-a text-muted">
+                                            <img src="{% static 'img/logos/ic/love_heart_icon_178900.png' %}" alt="">
+                                          </span>
+                                        <span class="switch-icon-b text-red">
+                                            <img src="{% static 'img/logos/ic/heart_icon-icons.com_54429.png' %}" alt="">
+                                          </span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}
