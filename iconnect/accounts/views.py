@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import get_user_model
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -12,6 +13,7 @@ from django.views import generic
 from posts.forms import PostCreateForm, PostUpdateForm
 from posts.models import Post
 from .forms import LoginForm, UserRegisterForm, UserUpdateForm, UserPasswordChangeForm
+# from .models import Follow
 
 User = get_user_model()
 
@@ -20,8 +22,8 @@ class UserRegisterView(generic.CreateView):
     template_name = 'accounts/auth/register.html'
     form_class = UserRegisterForm
     success_url = reverse_lazy('sign_in')
-    
-    
+
+
 class LoginView(generic.FormView):
     template_name = 'accounts/auth/login.html'
     form_class = LoginForm
@@ -56,7 +58,7 @@ class UserAccDetailView(LoginRequiredMixin, generic.DetailView):
         context['current_user_posts'] = Post.objects.filter(author_id=self.kwargs.get('pk'), is_archive=False)
         context['post_create_form'] = PostCreateForm()
         return context
-    
+
 
 class UpdateUserProfileView(LoginRequiredMixin, generic.UpdateView):
     model = User
@@ -65,7 +67,7 @@ class UpdateUserProfileView(LoginRequiredMixin, generic.UpdateView):
     
     def get_object(self, queryset=None):
         return self.request.user
-
+    
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = self.get_object()
@@ -82,5 +84,42 @@ class UserPostsListView(LoginRequiredMixin, generic.ListView):
     
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user, is_archive=True)
+
+
+class UsersSearchListView(LoginRequiredMixin, generic.ListView):
+    model = User
+    template_name = 'accounts/users_search.html'
+    context_object_name = 'users_search'
     
-    
+    def get_queryset(self):
+        search_text = self.request.GET.get('query')
+        if not search_text:
+            return self.model.objects.filter(is_active=True)
+        q = self.model.objects.filter(
+            Q(first_name__icontains=search_text) |
+            Q(last_name__icontains=search_text) |
+            Q(username__icontains=search_text)
+        )
+        return q
+
+
+class FollowUser(LoginRequiredMixin, generic.View):
+    def get(self, request, user_pk):
+        from_user = request.user
+        to_user = get_object_or_404(User, pk=user_pk)
+        if from_user not in to_user.followers.all():
+            to_user.followers.add(from_user)
+        return redirect('user_acc', pk=from_user.id)
+
+
+class UnfollowUser(LoginRequiredMixin, generic.View):
+    def get(self, request, user_pk):
+        from_user = request.user
+        to_user = get_object_or_404(User, pk=user_pk)
+        if from_user in to_user.followers.all():
+            to_user.followers.remove(from_user)
+        return redirect('user_acc', pk=from_user.id)
+
+
+
+

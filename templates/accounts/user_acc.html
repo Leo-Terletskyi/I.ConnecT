@@ -135,7 +135,20 @@
                 <ul class="list-unstyled px-1">
                     <li class="p-2 text-muted fw-bold">Profile actions:</li>
                     <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Messages</a></li>
-                    <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Friends</a></li>
+                    <li class="p-2">
+                        <a class="btn btn-azure" href="{% url 'user_profile' %}">Subscribes
+                            <span
+                                    class="badge badge-pill bg-google ms-2">{{ request.user.following_count }}
+                        </span>
+                        </a>
+                    </li>
+                    <li class="p-2">
+                        <a class="btn btn-azure" href="{% url 'user_profile' %}">Followers
+                            <span
+                                    class="badge badge-pill bg-google ms-2">{{ request.user.followers_count }}
+                        </span>
+                        </a>
+                    </li>
                     <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Groups</a></li>
                     <li class="p-2"><a class="btn btn-azure" href="{% url 'post_archive' request.user.id %}">Post archive</a></li>
                 </ul>
