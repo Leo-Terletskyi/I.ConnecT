@@ -8,6 +8,14 @@
 {% block header %}
     <div class="container-xl">
         <h2 class="text-muted px-2">{{ user.username }}</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-title">{{ message }}</h4>
+                </div>
+            {% endfor %}
+
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -142,6 +150,7 @@
                         </span>
                         </a>
                     </li>
+                    <li class="p-2"><a class="btn btn-azure" href="{% url 'feed' %}">Feed</a></li>
                     <li class="p-2">
                         <a class="btn btn-azure" href="{% url 'user_profile' %}">Followers
                             <span

@@ -108,6 +108,7 @@ class FollowUser(LoginRequiredMixin, generic.View):
         from_user = request.user
         to_user = get_object_or_404(User, pk=user_pk)
         if from_user not in to_user.followers.all():
+            messages.add_message(request, messages.SUCCESS, message=f'you have successfully subscribed ({to_user})')
             to_user.followers.add(from_user)
         return redirect('user_acc', pk=from_user.id)
 
@@ -117,6 +118,7 @@ class UnfollowUser(LoginRequiredMixin, generic.View):
         from_user = request.user
         to_user = get_object_or_404(User, pk=user_pk)
         if from_user in to_user.followers.all():
+            messages.add_message(request, messages.SUCCESS, message=f'you have successfully unsubscribed ({to_user})')
             to_user.followers.remove(from_user)
         return redirect('user_acc', pk=from_user.id)
 

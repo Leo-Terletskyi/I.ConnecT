@@ -21,6 +21,9 @@
 {% block content %}
     <div class="container-xl">
         <div class="card p-3">
+            {% if request.user.avatar %}
+                <img src="{{ request.user.avatar.url }}" width="350" alt="">
+            {% endif %}
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}

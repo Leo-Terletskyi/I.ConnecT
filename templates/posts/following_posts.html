@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Feed {% endblock %}
+
+{% block content %}
+    <div class="container-xl">
+        {% for post in posts %}
+            <div class="col-lg-12">
+                <div class="card mb-2">
+                    <div class="card-status-start bg-green"></div>
+                    <div class="row row-0">
+                        <div class="col-3 order-md-last p-1">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}"
+                                     class="w-100 h-100 object-cover card-img-end"
+                                     alt="">
+                            {% else %}
+                                <img src="{% static 'img/logos/no_logo/no-image__63632.webp' %}"
+                                     class="w-100 h-100 object-cover card-img-end"
+                                     alt="">
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            <div class="card-body">
+                                <h5 class="h-1 mb-4 px-4">
+                                    <a href="{% url 'user_acc' post.author.id %}" class="btn-green-rgba m-2 p-2 fs-4">
+                                        {{ post.author }}
+                                    </a>
+                                    Updated {{ post.updated_at|timesince }} ago
+                                </h5>
+                                <p class="text-muted">{{ post.description }}</p>
+                            </div>
+                            <div class="ribbon ribbon-bottom ribbon-end bg-white">
+                                <button class="switch-icon" data-bs-toggle="switch-icon">
+                                          <span class="switch-icon-a text-muted">
+                                            <img src="{% static 'img/logos/ic/love_heart_icon_178900.png' %}" alt="">
+                                          </span>
+                                    <span class="switch-icon-b text-red">
+                                            <img src="{% static 'img/logos/ic/heart_icon-icons.com_54429.png' %}" alt="">
+                                          </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

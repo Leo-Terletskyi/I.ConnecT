@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -5,6 +6,9 @@ from django.views import generic
 
 from .forms import PostCreateForm, PostUpdateForm
 from .models import Post
+
+
+User = get_user_model()
 
 
 class PostCreateView(generic.CreateView):
@@ -55,3 +59,15 @@ def delete_post(request, pk):
     if request.user.id == post.author.id:
         post.delete()
     return redirect('user_acc', pk=request.user.id)
+
+
+class FollowingPostListView(LoginRequiredMixin, generic.ListView):
+    model = Post
+    template_name = 'posts/following_posts.html'
+    context_object_name = 'posts'
+    
+    def get_queryset(self):
+        q = Post.objects.filter(author__in=self.request.user.following.all(), is_archive=False)
+        return q
+    
+    
