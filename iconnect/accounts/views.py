@@ -13,7 +13,6 @@ from django.views import generic
 from posts.forms import PostCreateForm, PostUpdateForm
 from posts.models import Post
 from .forms import LoginForm, UserRegisterForm, UserUpdateForm, UserPasswordChangeForm
-# from .models import Follow
 
 User = get_user_model()
 
@@ -123,5 +122,20 @@ class UnfollowUser(LoginRequiredMixin, generic.View):
         return redirect('user_acc', pk=from_user.id)
 
 
+class SubscribesListView(LoginRequiredMixin, generic.ListView):
+    model = User
+    template_name = 'accounts/subscribes.html'
+    context_object_name = 'users'
+    
+    def get_queryset(self):
+        return self.request.user.following.all()
 
+
+class FollowersListView(LoginRequiredMixin, generic.ListView):
+    model = User
+    template_name = 'accounts/followers.html'
+    context_object_name = 'users'
+    
+    def get_queryset(self):
+        return self.request.user.followers.all()
 

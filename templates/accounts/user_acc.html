@@ -144,7 +144,7 @@
                     <li class="p-2 text-muted fw-bold">Profile actions:</li>
                     <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Messages</a></li>
                     <li class="p-2">
-                        <a class="btn btn-azure" href="{% url 'user_profile' %}">Subscribes
+                        <a class="btn btn-azure" href="{% url 'subscribes' %}">Subscribes
                             <span
                                     class="badge badge-pill bg-google ms-2">{{ request.user.following_count }}
                         </span>
@@ -152,7 +152,7 @@
                     </li>
                     <li class="p-2"><a class="btn btn-azure" href="{% url 'feed' %}">Feed</a></li>
                     <li class="p-2">
-                        <a class="btn btn-azure" href="{% url 'user_profile' %}">Followers
+                        <a class="btn btn-azure" href="{% url 'followers' %}">Followers
                             <span
                                     class="badge badge-pill bg-google ms-2">{{ request.user.followers_count }}
                         </span>

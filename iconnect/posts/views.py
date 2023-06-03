@@ -67,7 +67,5 @@ class FollowingPostListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'posts'
     
     def get_queryset(self):
-        q = Post.objects.filter(author__in=self.request.user.following.all(), is_archive=False)
-        return q
-    
-    
+        return Post.objects.filter(author__in=self.request.user.following.all(), is_archive=False)
+
