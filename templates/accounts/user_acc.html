@@ -141,25 +141,46 @@
             {% endif %}
             <div class="col-lg-3 m-0">
                 <ul class="list-unstyled px-1">
-                    <li class="p-2 text-muted fw-bold">Profile actions:</li>
-                    <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Messages</a></li>
-                    <li class="p-2">
-                        <a class="btn btn-azure" href="{% url 'subscribes' %}">Subscribes
-                            <span
-                                    class="badge badge-pill bg-google ms-2">{{ request.user.following_count }}
+                    {% if user == request.user %}
+                        <li class="p-2 text-muted fw-bold">Profile actions:</li>
+                        <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Messages</a></li>
+                        <li class="p-2">
+                            <a class="btn btn-azure" href="{% url 'following' request.user.id %}">Following
+                                <span
+                                        class="badge badge-pill bg-google ms-2">{{ request.user.following_count }}
                         </span>
-                        </a>
-                    </li>
-                    <li class="p-2"><a class="btn btn-azure" href="{% url 'feed' %}">Feed</a></li>
-                    <li class="p-2">
-                        <a class="btn btn-azure" href="{% url 'followers' %}">Followers
-                            <span
-                                    class="badge badge-pill bg-google ms-2">{{ request.user.followers_count }}
+                            </a>
+                        </li>
+                        <li class="p-2"><a class="btn btn-azure" href="{% url 'feed' %}">Feed</a></li>
+                        <li class="p-2">
+                            <a class="btn btn-azure" href="{% url 'followers' request.user.id %}">Followers
+                                <span
+                                        class="badge badge-pill bg-google ms-2">{{ request.user.followers_count }}
                         </span>
-                        </a>
-                    </li>
-                    <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Groups</a></li>
-                    <li class="p-2"><a class="btn btn-azure" href="{% url 'post_archive' request.user.id %}">Post archive</a></li>
+                            </a>
+                        </li>
+                        <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Groups</a></li>
+                        <li class="p-2"><a class="btn btn-azure" href="{% url 'post_archive' request.user.id %}">Post archive</a></li>
+                    {% else %}
+                        <li class="p-2 text-muted fw-bold">Profile actions:</li>
+                        <li class="p-2"><a class="btn btn-green" href="#">Send Message</a></li>
+                        <li class="p-2">
+                            <a class="btn btn-azure" href="{% url 'following' user.id %}">Following
+                                <span
+                                        class="badge badge-pill bg-google ms-2">{{ user.following_count }}
+                        </span>
+                            </a>
+                        </li>
+                        <li class="p-2">
+                            <a class="btn btn-azure" href="{% url 'followers' user.id %}">Followers
+                                <span
+                                        class="badge badge-pill bg-google ms-2">{{ user.followers_count }}
+                        </span>
+                            </a>
+                        </li>
+                        <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Groups</a></li>
+                    {% endif %}
+
                 </ul>
             </div>
             {% if current_user_posts %}
@@ -200,16 +221,21 @@
                                                 archive
                                             </div>
                                         </a>
+                                        <div class="ribbon ribbon-bottom ribbon-end mb-4">
+                                            likes: {{ post.likes.count }}
+                                        </div>
                                     {% else %}
-                                        <div class="ribbon ribbon-bottom ribbon-end bg-white">
-                                            <button class="switch-icon" data-bs-toggle="switch-icon">
-                                          <span class="switch-icon-a text-muted">
-                                            <img src="{% static 'img/logos/ic/love_heart_icon_178900.png' %}" alt="">
-                                          </span>
-                                                <span class="switch-icon-b text-red">
-                                            <img src="{% static 'img/logos/ic/heart_icon-icons.com_54429.png' %}" alt="">
-                                          </span>
-                                            </button>
+                                        <div class="ribbon ribbon-bottom ribbon-end bg-white mb-4">
+                                            <a class="icon" href="{% url 'like_post' post.id %}">
+                                                {% if request.user in post.likes.all %}
+                                                    <img src="{% static 'img/logos/ic/heart_icon-icons.com_54429.png' %}" alt="">
+                                                {% else %}
+                                                    <img src="{% static 'img/logos/ic/love_heart_icon_178900.png' %}" alt="">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="ribbon ribbon-bottom ribbon-end">
+                                            likes: {{ post.likes.count }}
                                         </div>
                                     {% endif %}
                                 </div>

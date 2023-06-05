@@ -14,8 +14,8 @@ urlpatterns = [
     path('<int:pk>/post-archive/', views.UserPostsListView.as_view(), name='post_archive'),
     path('profile/', views.UpdateUserProfileView.as_view(), name='user_profile'),
     path('search/', views.UsersSearchListView.as_view(), name='users_search'),
-    path('subscribes/', views.SubscribesListView.as_view(), name='subscribes'),
-    path('followers/', views.FollowersListView.as_view(), name='followers'),
+    path('<int:user_pk>/following/', views.FollowingListView.as_view(), name='following'),
+    path('<int:user_pk>/followers/', views.FollowersListView.as_view(), name='followers'),
     
     # follows
     path('follow/<int:user_pk>/', views.FollowUser.as_view(), name='follow_user'),

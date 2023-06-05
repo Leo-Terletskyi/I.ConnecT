@@ -109,7 +109,8 @@ class FollowUser(LoginRequiredMixin, generic.View):
         if from_user not in to_user.followers.all():
             messages.add_message(request, messages.SUCCESS, message=f'you have successfully subscribed ({to_user})')
             to_user.followers.add(from_user)
-        return redirect('user_acc', pk=from_user.id)
+        previous_page = request.META.get('HTTP_REFERER')
+        return redirect(previous_page)
 
 
 class UnfollowUser(LoginRequiredMixin, generic.View):
@@ -119,16 +120,19 @@ class UnfollowUser(LoginRequiredMixin, generic.View):
         if from_user in to_user.followers.all():
             messages.add_message(request, messages.SUCCESS, message=f'you have successfully unsubscribed ({to_user})')
             to_user.followers.remove(from_user)
-        return redirect('user_acc', pk=from_user.id)
+        previous_page = request.META.get('HTTP_REFERER')
+        return redirect(previous_page)
 
 
-class SubscribesListView(LoginRequiredMixin, generic.ListView):
+class FollowingListView(LoginRequiredMixin, generic.ListView):
     model = User
-    template_name = 'accounts/subscribes.html'
+    template_name = 'accounts/following.html'
     context_object_name = 'users'
     
     def get_queryset(self):
-        return self.request.user.following.all()
+        user_pk = self.kwargs.get('user_pk')
+        user = get_object_or_404(User, id=user_pk)
+        return user.following.all()
 
 
 class FollowersListView(LoginRequiredMixin, generic.ListView):
@@ -137,5 +141,6 @@ class FollowersListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'users'
     
     def get_queryset(self):
-        return self.request.user.followers.all()
-
+        user_pk = self.kwargs.get('user_pk')
+        user = get_object_or_404(User, id=user_pk)
+        return user.followers.all()

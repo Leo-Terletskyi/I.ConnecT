@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -68,4 +69,19 @@ class FollowingPostListView(LoginRequiredMixin, generic.ListView):
     
     def get_queryset(self):
         return Post.objects.filter(author__in=self.request.user.following.all(), is_archive=False)
+
+
+@login_required
+def like_post(request, post_pk):
+    post = get_object_or_404(Post, id=post_pk)
+    user = request.user
+    all_likes = post.likes.all()
+    if user not in all_likes:
+        post.likes.add(user)
+        post.save()
+    else:
+        post.likes.remove(user)
+        post.save()
+    previous_page = request.META.get('HTTP_REFERER')
+    return redirect(previous_page)
 

@@ -8,5 +8,6 @@ urlpatterns = [
     path('archiving/<int:pk>/', views.post_archiving, name='post_archiving'),
     path('delete/<int:pk>/', views.delete_post, name='delete_post'),
     path('feed/', views.FollowingPostListView.as_view(), name='feed'),
+    path('like/<int:post_pk>/', views.like_post, name='like_post'),
     
 ]
