@@ -1,6 +1,6 @@
 from django import forms
 
-from posts.models import Post
+from posts.models import Post, PostComment
 
 
 class PostCreateForm(forms.ModelForm):
@@ -44,3 +44,11 @@ class PostUpdateForm(forms.ModelForm):
             instance.save()
         return instance
 
+
+class PostCommentForm(forms.ModelForm):
+    class Meta:
+        model = PostComment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control'})
+        }

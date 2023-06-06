@@ -5,8 +5,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
-from .forms import PostCreateForm, PostUpdateForm
-from .models import Post
+from .forms import PostCreateForm, PostUpdateForm, PostCommentForm
+from .models import Post, PostComment
 
 
 User = get_user_model()
@@ -55,6 +55,7 @@ def post_archiving(request, pk):
     return redirect('post_archive', pk=request.user.id)
 
 
+@login_required
 def delete_post(request, pk):
     post = get_object_or_404(Post, id=pk)
     if request.user.id == post.author.id:
@@ -69,6 +70,11 @@ class FollowingPostListView(LoginRequiredMixin, generic.ListView):
     
     def get_queryset(self):
         return Post.objects.filter(author__in=self.request.user.following.all(), is_archive=False)
+    
+    def get_context_data(self, **kwargs):
+        context = super(FollowingPostListView, self).get_context_data()
+        context['post_comment_form'] = PostCommentForm()
+        return context
 
 
 @login_required
@@ -85,3 +91,32 @@ def like_post(request, post_pk):
     previous_page = request.META.get('HTTP_REFERER')
     return redirect(previous_page)
 
+
+class PostCommentCreateView(LoginRequiredMixin, generic.CreateView):
+    model = PostComment
+    form_class = PostCommentForm
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.author = self.request.user
+        post_id = self.kwargs.get('post_id')
+        comment.post = get_object_or_404(Post, id=post_id)
+        comment.save()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        previous_page = self.request.META.get('HTTP_REFERER')
+        if previous_page.endswith('/posts/feed/'):
+            return reverse_lazy('feed')
+        post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
+        post_author_id = post.author.id
+        return reverse_lazy('user_acc', kwargs={'pk': post_author_id})
+
+
+@login_required
+def delete_post_comment(request, pk):
+    comment = get_object_or_404(PostComment, id=pk)
+    if request.user.id == comment.author.id:
+        comment.delete()
+    previous_page = request.META.get('HTTP_REFERER')
+    return redirect(previous_page)

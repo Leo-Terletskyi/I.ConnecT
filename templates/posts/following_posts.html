@@ -41,7 +41,76 @@
                                 </a>
                             </div>
                             <div class="ribbon ribbon-bottom ribbon-end">
-                               likes: {{ post.likes.count }}
+                                likes: {{ post.likes.count }}
+                            </div>
+                            <div class="ribbon ribbon-bottom ribbon-start bg-azure fs-5" data-bs-toggle="modal"
+                                 data-bs-target="#{{ post.content|truncatewords:3 }}{{ post.id }}">
+                                Comments
+                                <span
+                                        class="badge badge-pill bg-google ms-2">{{ post.post_comments.count }}
+                                        </span>
+                            </div>
+                            <div class="modal" id="{{ post.content|truncatewords:3 }}{{ post.id }}" tabindex="">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Comments ({{ post.description|truncatewords:5 }})</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                {% for comment in post.post_comments.all %}
+                                                    <div class="list-group list-group-flush list-group-hoverable">
+                                                        <div class="list-group-item">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-auto">
+                                                                    <a href="#">
+                                                                                <span class="avatar"
+                                                                                      style="background-image: url(
+                                                                                              {% if comment.author.avatar %}
+                                                                                                  {{ comment.author.avatar.url }}
+                                                                                              {% else %}
+                                                                                                  {% static 'img/logos/ic/user_icon_251290.png' %}
+                                                                                              {% endif %}
+                                                                                              )"></span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col text-truncate">
+                                                                    <a href="#" class="text-reset d-block">{{ comment.author.full_name }}
+                                                                        - {{ comment.created_at|timesince }}</a>
+                                                                    <div class="d-block text-muted text-truncate mt-n1">
+                                                                        {{ comment.content }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    {% if request.user == comment.author %}
+                                                                        <a href="{% url 'delete_post_comment' comment.id %}">
+                                                                            <img src="{% static 'img/logos/ic/xbox-x.png' %}" width="20px" alt="">
+                                                                        </a>
+                                                                    {% endif %} 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+
+                                                <div class="row g-2">
+                                                    <form action="{% url 'add_comment' post.id %}" method="post">
+                                                        <div class="col">
+                                                            {% csrf_token %}
+                                                            {{ post_comment_form.as_p }}
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <button type="submit" class="btn btn-outline-success">Add comment
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
