@@ -8,6 +8,7 @@ class User(AbstractUser):
     birthday = models.DateField(null=True, blank=True)
     phone = models.CharField('phone number', max_length=14, null=True)
     following = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='followers')
+    is_private = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = 'user'

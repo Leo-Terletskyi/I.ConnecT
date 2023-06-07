@@ -22,7 +22,7 @@
     <div class="container-xl">
         <div class="card p-3">
             {% if request.user.avatar %}
-                <img src="{{ request.user.avatar.url }}" width="350" alt="">
+                <img src="{{ request.user.avatar.url }}" class="user-avatar mb-3" width="350" alt="">
             {% endif %}
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}

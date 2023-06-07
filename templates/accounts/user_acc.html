@@ -27,7 +27,7 @@
                 <div class="card bg-body border-0">
                     <div class="card-body px-0 py-0">
                         {% if user.avatar %}
-                            <img class="he-300 w-auto" src="{{ user.avatar.url }}" alt="">
+                            <img class="he-300 w-auto user-avatar" src="{{ user.avatar.url }}" alt="">
                         {% else %}
                             <img src="{% static 'img/logos/ic/sbcf-default-avatar.webp' %}" alt="">
                         {% endif %}
@@ -35,104 +35,126 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-8">
-                <div class="col-md-6 col-lg-6">
-                    <div class="card">
-                        <div class="ribbon ribbon-top bg-azure">
-                            <img src="{% static 'img/logos/ic/fingerprint.png' %}" alt="">
+                {% if not user.is_private or user == request.user or request.user in user.following.all %}
+                    <div class="col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="ribbon ribbon-top bg-azure">
+                                <img src="{% static 'img/logos/ic/fingerprint.png' %}" alt="">
+                            </div>
+                            <div class="card-status-start bg-vimeo"></div>
+                            <div class="card-header">
+                                <h3 class="card-title fw-bold text-muted">User info:</h3>
+                            </div>
+                            <table class="table card-table table-vcenter he-250">
+                                <tbody>
+                                <tr class="table-light">
+                                    <td>First name:</td>
+                                    <td>
+                                        {% if user.first_name %}
+                                            {{ user.first_name }}
+                                        {% else %}
+                                            ---
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="table-light">
+                                    <td>Last name:</td>
+                                    <td>
+                                        {% if user.last_name %}
+                                            {{ user.last_name }}
+                                        {% else %}
+                                            ---
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="table-light">
+                                    <td>Birthday:</td>
+                                    <td>
+                                        {% if user.birthday %}
+                                            {{ user.birthday }}
+                                        {% else %}
+                                            ---
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="table-light">
+                                    <td>Email:</td>
+                                    <td>
+                                        {% if user.email %}
+                                            {{ user.email }}
+                                        {% else %}
+                                            ---
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="card-status-start bg-vimeo"></div>
-                        <div class="card-header">
-                            <h3 class="card-title fw-bold text-muted">User info:</h3>
-                        </div>
-                        <table class="table card-table table-vcenter he-250">
-                            <tbody>
-                            <tr class="table-light">
-                                <td>First name:</td>
-                                <td>
-                                    {% if user.first_name %}
-                                        {{ user.first_name }}
-                                    {% else %}
-                                        ---
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr class="table-light">
-                                <td>Last name:</td>
-                                <td>
-                                    {% if user.last_name %}
-                                        {{ user.last_name }}
-                                    {% else %}
-                                        ---
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr class="table-light">
-                                <td>Birthday:</td>
-                                <td>
-                                    {% if user.birthday %}
-                                        {{ user.birthday }}
-                                    {% else %}
-                                        ---
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr class="table-light">
-                                <td>Email:</td>
-                                <td>
-                                    {% if user.email %}
-                                        {{ user.email }}
-                                    {% else %}
-                                        ---
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
                     </div>
-                </div>
-                <div class="col-md-6 col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Gallery</h3>
-                        </div>
-                        <div class="card-body p-0">
-                            <div id="carousel-captions" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    <div class="carousel-item">
-                                        <img class="d-block w-auto he-250 m-auto" alt=""
-                                             src="{% static 'img/logos/IconnecT-logos/svg/logo-white.svg' %}">
-                                        <div class="carousel-caption-background d-none d-md-block"></div>
+                    <div class="col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Gallery</h3>
+                            </div>
+                            <div class="card-body p-0">
+                                <div id="carousel-captions" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item">
+                                            <img class="d-block w-auto he-250 m-auto" alt=""
+                                                 src="{% static 'img/logos/IconnecT-logos/svg/logo-white.svg' %}">
+                                            <div class="carousel-caption-background d-none d-md-block"></div>
+                                        </div>
+                                        <div class="carousel-item"><img class="d-block w-auto he-250 m-auto" alt=""
+                                                                        src="{% static 'img/logos/IconnecT-logos/svg/logo-black.svg' %}">
+                                            <div class="carousel-caption-background d-none d-md-block"></div>
+                                        </div>
+                                        <div class="carousel-item"><img class="d-block w-auto he-250 m-auto" alt=""
+                                                                        src="{% static 'img/logos/IconnecT-logos/svg/logo-color.svg' %}">
+                                            <div class="carousel-caption-background d-none d-md-block"></div>
+                                        </div>
+                                        <div class="carousel-item">
+                                            <img class="d-block w-auto he-250 m-auto" alt=""
+                                                 src="{% static 'img/logos/inline_logo/svg/logo-white.svg' %}">
+                                            <div class="carousel-caption-background d-none d-md-block"></div>
+                                        </div>
+                                        <div class="carousel-item active"><img class="d-block w-auto he-250 m-auto" alt=""
+                                                                               src="{% static 'img/logos/inline_logo/svg/logo-color.svg' %}">
+                                            <div class="carousel-caption-background d-none d-md-block"></div>
+                                        </div>
                                     </div>
-                                    <div class="carousel-item"><img class="d-block w-auto he-250 m-auto" alt=""
-                                                                    src="{% static 'img/logos/IconnecT-logos/svg/logo-black.svg' %}">
-                                        <div class="carousel-caption-background d-none d-md-block"></div>
-                                    </div>
-                                    <div class="carousel-item"><img class="d-block w-auto he-250 m-auto" alt=""
-                                                                    src="{% static 'img/logos/IconnecT-logos/svg/logo-color.svg' %}">
-                                        <div class="carousel-caption-background d-none d-md-block"></div>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img class="d-block w-auto he-250 m-auto" alt=""
-                                             src="{% static 'img/logos/inline_logo/svg/logo-white.svg' %}">
-                                        <div class="carousel-caption-background d-none d-md-block"></div>
-                                    </div>
-                                    <div class="carousel-item active"><img class="d-block w-auto he-250 m-auto" alt=""
-                                                                           src="{% static 'img/logos/inline_logo/svg/logo-color.svg' %}">
-                                        <div class="carousel-caption-background d-none d-md-block"></div>
-                                    </div>
+                                    <a class="carousel-control-prev" href="#carousel-captions" role="button" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carousel-captions" role="button" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </a>
                                 </div>
-                                <a class="carousel-control-prev" href="#carousel-captions" role="button" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" href="#carousel-captions" role="button" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% else %}
+                    <div class="col-md-6 col-lg-12">
+                        <div class="card">
+                            <div class="ribbon ribbon-top bg-azure">
+                                <img src="{% static 'img/logos/ic/fingerprint.png' %}" alt="">
+                            </div>
+                            <div class="card-status-start bg-vimeo"></div>
+                            <div class="card-header">
+                                <h3 class="card-title fw-bold text-muted">User info:</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-danger p-2" role="alert">
+                                    Access denied!
+                                </div>
+                                <div class="alert alert-danger p-2" role="alert">
+                                    This is private account!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             {% if request.user.id == user.id %}
                 <div class="hr-text">{% include 'posts/post_create_modal_form.html' %}</div>
@@ -162,23 +184,37 @@
                         <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Groups</a></li>
                         <li class="p-2"><a class="btn btn-azure" href="{% url 'post_archive' request.user.id %}">Post archive</a></li>
                     {% else %}
-                        <li class="p-2 text-muted fw-bold">Profile actions:</li>
-                        <li class="p-2"><a class="btn btn-green" href="#">Send Message</a></li>
-                        <li class="p-2">
-                            <a class="btn btn-azure" href="{% url 'following' user.id %}">Following
-                                <span
-                                        class="badge badge-pill bg-google ms-2">{{ user.following_count }}
+                        {% if not user.is_private or request.user in user.following.all %}
+                            <li class="p-2 text-muted fw-bold">Profile actions:</li>
+                            <li class="p-2"><a class="btn btn-green" href="#">Send Message</a></li>
+                            <li class="p-2">
+                                <a class="btn btn-azure" href="{% url 'following' user.id %}">Following
+                                    <span
+                                            class="badge badge-pill bg-google ms-2">{{ user.following_count }}
                                 </span>
-                            </a>
-                        </li>
-                        <li class="p-2">
-                            <a class="btn btn-azure" href="{% url 'followers' user.id %}">Followers
-                                <span
-                                        class="badge badge-pill bg-google ms-2">{{ user.followers_count }}
-                        </span>
-                            </a>
-                        </li>
-                        <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Groups</a></li>
+                                </a>
+                            </li>
+                            <li class="p-2">
+                                <a class="btn btn-azure" href="{% url 'followers' user.id %}">Followers
+                                    <span
+                                            class="badge badge-pill bg-google ms-2">{{ user.followers_count }}
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="p-2"><a class="btn btn-azure" href="{% url 'user_profile' %}">Groups</a></li>
+                            {% if request.user not in user.followers.all %}
+                                <li class="p-2"><a class="btn btn-green" href="{% url 'follow_user' user.id %}">+ Follow {{ user.username }}</a></li>
+                            {% else %}
+                                <li class="p-2"><a class="btn btn-danger" href="{% url 'unfollow_user' user.id %}">- Unfollow {{ user.username }}</a></li>
+                            {% endif %}
+                        {% else %}
+                            <li class="p-2 text-muted fw-bold">Profile actions:</li>
+                            {% if request.user not in user.followers.all %}
+                                <li class="p-2"><a class="btn btn-green" href="{% url 'follow_user' user.id %}">+ Follow {{ user.username }}</a></li>
+                            {% else %}
+                                <li class="p-2"><a class="btn btn-danger" href="{% url 'unfollow_user' user.id %}">- Unfollow {{ user.username }}</a></li>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
 
                 </ul>
@@ -192,7 +228,7 @@
                                 <div class="col-3 order-md-last p-1">
                                     {% if post.image %}
                                         <img src="{{ post.image.url }}"
-                                             class="w-100 h-100 object-cover card-img-end"
+                                             class="mh-100 object-cover card-img-end"
                                              alt="">
                                     {% else %}
                                         <img src="{% static 'img/logos/no_logo/no-image__63632.webp' %}"
@@ -238,29 +274,30 @@
                                             likes: {{ post.likes.count }}
                                         </div>
                                     {% endif %}
-                                    <div class="ribbon ribbon-bottom ribbon-start bg-azure fs-5" data-bs-toggle="modal"
-                                         data-bs-target="#{{ post.content|truncatewords:3 }}{{ post.id }}">
-                                        Comments
-                                        <span
-                                                class="badge badge-pill bg-google ms-2 fw-bolder">{{ post.post_comments.count }}
+                                    {% if not user.is_private or user == request.user or request.user in user.following.all %}
+                                        <div class="ribbon ribbon-bottom ribbon-start bg-azure fs-5 cursor-pointer" data-bs-toggle="modal"
+                                             data-bs-target="#{{ post.content|truncatewords:3 }}{{ post.id }}">
+                                            Comments
+                                            <span
+                                                    class="badge badge-pill bg-google ms-2 fw-bolder">{{ post.post_comments.count }}
                                         </span>
-                                    </div>
-                                    <div class="modal" id="{{ post.content|truncatewords:3 }}{{ post.id }}" tabindex="">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Comments ({{ post.description|truncatewords:5 }})</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        {% for comment in post.post_comments.all %}
-                                                            <div class="list-group list-group-flush list-group-hoverable">
-                                                                <div class="list-group-item">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-auto">
-                                                                            <a href="#">
+                                        </div>
+                                        <div class="modal" id="{{ post.content|truncatewords:3 }}{{ post.id }}" tabindex="">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Comments ({{ post.description|truncatewords:5 }})</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            {% for comment in post.post_comments.all %}
+                                                                <div class="list-group list-group-flush list-group-hoverable">
+                                                                    <div class="list-group-item">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-auto">
+                                                                                <a href="#">
                                                                                 <span class="avatar"
                                                                                       style="background-image: url(
                                                                                               {% if comment.author.avatar %}
@@ -269,46 +306,47 @@
                                                                                                   {% static 'img/logos/ic/user_icon_251290.png' %}
                                                                                               {% endif %}
                                                                                               )"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="col text-truncate">
-                                                                            <a href="#"
-                                                                               class="text-reset d-block">{{ comment.author.full_name }}
-                                                                                - {{ comment.created_at|timesince }}</a>
-                                                                            <div class="d-block text-muted text-truncate mt-n1">
-                                                                                {{ comment.content }}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-auto">
-                                                                            {% if request.user == comment.author %}
-                                                                                <a href="{% url 'delete_post_comment' comment.id %}">
-                                                                                    <img src="{% static 'img/logos/ic/xbox-x.png' %}"
-                                                                                         width="20px" alt="">
                                                                                 </a>
-                                                                            {% endif %}
+                                                                            </div>
+                                                                            <div class="col text-truncate">
+                                                                                <a href="#"
+                                                                                   class="text-reset d-block">{{ comment.author.full_name }}
+                                                                                    - {{ comment.created_at|timesince }}</a>
+                                                                                <div class="d-block text-muted text-truncate mt-n1">
+                                                                                    {{ comment.content }}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                {% if request.user == comment.author %}
+                                                                                    <a href="{% url 'delete_post_comment' comment.id %}">
+                                                                                        <img src="{% static 'img/logos/ic/xbox-x.png' %}"
+                                                                                             width="16px" alt="">
+                                                                                    </a>
+                                                                                {% endif %}
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        {% endfor %}
+                                                            {% endfor %}
 
-                                                        <div class="row g-2">
-                                                            <form action="{% url 'add_comment' post.id %}" method="post">
-                                                                <div class="col">
-                                                                    {% csrf_token %}
-                                                                    {{ post_comment_form.as_p }}
-                                                                </div>
-                                                                <div class="col-auto">
-                                                                    <button type="submit" class="btn btn-outline-success">Add comment
-                                                                    </button>
-                                                                </div>
-                                                            </form>
+                                                            <div class="row g-2">
+                                                                <form action="{% url 'add_comment' post.id %}" method="post">
+                                                                    <div class="col">
+                                                                        {% csrf_token %}
+                                                                        {{ post_comment_form.as_p }}
+                                                                    </div>
+                                                                    <div class="col-auto">
+                                                                        <button type="submit" class="btn btn-outline-success">Add comment
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
