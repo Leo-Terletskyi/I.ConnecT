@@ -1,12 +1,19 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import get_user_model
+from django.core.mail import send_mail, BadHeaderError
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import gettext_lazy
 from django.views import generic
 
@@ -145,3 +152,39 @@ class FollowersListView(LoginRequiredMixin, generic.ListView):
         user_pk = self.kwargs.get('user_pk')
         user = get_object_or_404(User, id=user_pk)
         return user.followers.all()
+
+
+def password_reset(request):
+    if request.method == "POST":
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            user = User.objects.get(email=email)
+            subject = "Password reset"
+            email_template_name = "accounts/auth/password_reset_email.html"
+            reset_data = {
+                "email": user.email,
+                "domain": "127.0.0.1:8000",
+                "site_name": "IconnecT",
+                "uid": urlsafe_base64_encode(force_bytes(user.id)),
+                "user": user,
+                "token": default_token_generator.make_token(user),
+                "protocol": "http",
+            }
+            email = render_to_string(email_template_name, reset_data)
+            print(email)
+            try:
+                send_mail(
+                    subject=subject,
+                    message=email,
+                    recipient_list=[user.email],
+                    from_email=settings.EMAIL_HOST_USER,
+                    fail_silently=True,
+                
+                )
+            except BadHeaderError:
+                return HttpResponse("Invalid Header")
+            return redirect(reverse_lazy("password_reset_done"))
+    else:
+        form = PasswordResetForm()
+    return render(request, "accounts/auth/password_reset.html", {"form": form})

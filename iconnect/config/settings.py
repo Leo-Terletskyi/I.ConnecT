@@ -133,3 +133,11 @@ MEDIA_ROOT = STATIC_MEDIA_TEMPLATES_DIRS / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST_1')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER_1')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD_1')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
